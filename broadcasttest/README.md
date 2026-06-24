@@ -71,17 +71,3 @@ MockPhoneNumberService
 ```
 
 The application uses `CompletableFuture` to process broadcasts asynchronously while keeping the UI responsive.
-
-## Challenge Answers
-
-Additional answers for:
-
-- Architecture
-- Scalability
-- Resilience
-
-can be found in:
-
-```text
-CHALLENGE_ANSWERS.md
-```
