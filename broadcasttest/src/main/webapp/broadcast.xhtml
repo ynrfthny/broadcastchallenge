@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:p="primefaces">
+
+<h:head>
+    <title>Priority Broadcast Engine</title>
+
+    <style>
+
+        body {
+        margin: 0;
+        min-height: 100vh;
+
+        background:
+                radial-gradient(
+                        circle at top left,
+                        rgba(168, 85, 247, 0.08),
+                        transparent 30%
+                ),
+                radial-gradient(
+                        circle at top right,
+                        rgba(96, 165, 250, 0.08),
+                        transparent 30%
+                ),
+                #ffffff;
+
+        font-family: Arial, sans-serif;
+    }
+
+    .container {
+        width: 90%;
+        max-width: 1200px;
+        margin: 30px auto;
+    }
+
+    .header-panel {
+        margin-bottom: 20px;
+
+        border-radius: 12px;
+
+        box-shadow:
+                0 4px 20px rgba(0, 0, 0, 0.06);
+    }
+
+    .summary-box {
+        display: inline-block;
+
+        width: 180px;
+
+        text-align: center;
+
+        padding: 15px;
+
+        margin-right: 10px;
+
+        border-radius: 12px;
+
+        background: rgba(255, 255, 255, 0.9);
+
+        box-shadow:
+                0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .success {
+        color: #16a34a;
+        font-weight: bold;
+    }
+
+    .failed {
+        color: #dc2626;
+        font-weight: bold;
+    }
+
+    .pending {
+        color: #6b7280;
+        font-weight: bold;
+    }
+
+    .processing {
+        color: #f59e0b;
+        font-weight: bold;
+    }
+
+    .action-panel {
+        margin-top: 20px;
+        margin-bottom: 20px;
+
+        border-radius: 12px;
+
+        box-shadow:
+                0 4px 20px rgba(0, 0, 0, 0.06);
+    }
+
+    .ui-panel {
+        border-radius: 12px !important;
+
+        box-shadow:
+                0 4px 20px rgba(0, 0, 0, 0.06);
+    }
+
+    .ui-button {
+        border-radius: 8px !important;
+    }
+
+    h2 {
+        color: #4f46e5;
+    }
+
+    h3 {
+        color: #6366f1;
+    }
+    </style>
+
+</h:head>
+
+<h:body>
+
+    <div class="container">
+
+        <h:form id="form">
+
+            <!-- Header -->
+
+            <p:panel styleClass="header-panel">
+
+                <h2> Priority Broadcast Engine</h2>
+
+                <h:outputText
+                        value="Async Messaging Simulation using Spring Boot + PrimeFaces"/>
+
+            </p:panel>
+
+            <!-- Summary -->
+
+            <div>
+
+                <div class="summary-box">
+                    <h2 class="success">
+                        #{broadcastBean.successCount}
+                    </h2>
+                    Success
+                </div>
+
+                <div class="summary-box">
+                    <h2 class="failed">
+                        #{broadcastBean.failedCount}
+                    </h2>
+                    Failed
+                </div>
+
+                <div class="summary-box">
+                    <h2 class="pending">
+                        #{broadcastBean.pendingCount}
+                    </h2>
+                    Pending
+                </div>
+
+            </div>
+
+            <!-- Action -->
+
+            <p:panel styleClass="action-panel">
+
+                <p:commandButton
+                        value="Start Priority Broadcast"
+                        action="#{broadcastBean.startBroadcast}"
+                        process="@this"
+                        update="@form"/>
+                <br/>
+                <br/>
+
+                <h3>Broadcast Progress</h3>
+
+                <p:progressBar
+                        id="progressBar"
+                        value="#{broadcastBean.progress}"
+                        labelTemplate="{value}%"/>
+
+            </p:panel>
+
+            <!-- Table -->
+
+            <p:panel header="Customer Broadcast Status">
+
+                <p:dataTable
+                        id="customerTable"
+                        value="#{broadcastBean.customers}"
+                        var="customer">
+
+                    <p:column headerText="ID">
+                        #{customer.id}
+                    </p:column>
+
+                    <p:column headerText="Name">
+                        #{customer.name}
+                    </p:column>
+
+                    <p:column headerText="Phone">
+                        #{customer.phoneNumber}
+                    </p:column>
+
+                    <p:column headerText="Status">
+
+                        <h:outputText
+                                value="#{customer.status}"
+                                styleClass="#{customer.status eq 'SUCCESS' ? 'success' :
+                                          customer.status eq 'FAILED' ? 'failed' :
+                                          customer.status eq 'PROCESSING' ? 'processing' :
+                                          'pending'}"/>
+
+                    </p:column>
+
+                </p:dataTable>
+
+            </p:panel>
+
+            <p:poll
+                    interval="1"
+                    update="@form"/>
+
+        </h:form>
+
+    </div>
+
+</h:body>
+
+</html>
